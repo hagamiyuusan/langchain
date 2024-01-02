@@ -1,0 +1,10 @@
+faiss-cpu
+langchain
+bitsandbytes
+accelerate
+sentence-transformers
+InstructorEmbedding
+pypdf
+PyPDF2
+einops
+transformers
