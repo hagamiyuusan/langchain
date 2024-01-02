@@ -36,6 +36,11 @@ def generate_response(prompt):
     response = requests.post(api_url, json=question)
     return response.json()["result"]
 
+def api_change_model(model_name):
+    api_url = "http://127.0.0.1:13578/respone"
+    question = {"model_name": model_name}
+    response = requests.post(api_url, json=question)
+    return response.json()["result"]
 
  
 # Initialize session state variables
@@ -50,6 +55,18 @@ response_container = st.container()
 # Capture user input and display bot responses
 user_input = st.text_input("You: ", "", key="input")
 with st.sidebar:
+
+    option = st.selectbox(
+        "Which model do you want to use ?",
+        ("bkai-foundation-models/vietnamese-llama2-7b-120GB", "LR-AI-Labs/vbd-llama2-7B-50b-chat", "vilm/vinallama-7b"),
+        index=None,
+        placeholder="Which model do you want to use ?",
+        )
+    with st.spinner("Switching model"):
+        st.button('Switch model', key='switching_model',
+          on_click=api_change_model, args=(option, ))
+
+
     st.subheader("Your documents")
     pdf_docs = st.file_uploader(
         "Upload your txt/images files here and click on 'Process'", accept_multiple_files=False)
@@ -66,6 +83,8 @@ with st.sidebar:
                 st.image(im)
                 st.text_area("OCR result", content)
                 create_db(content['result'])
+
+
 with response_container:
     if user_input:
         response = generate_response(user_input)

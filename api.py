@@ -33,6 +33,8 @@ class Prompt(BaseModel):
     question: str
 class ImgBase64(BaseModel):
     image: str
+class ModelName(BaseModel):
+    model_name : str
 class OCR:
     def __init__(self):
         self.ocr = PaddleOCR(use_angle_cls=True, lang='en')
@@ -122,8 +124,8 @@ class LLM:
         )
 
         self.llm = HuggingFacePipeline(pipeline = self.text_pipeline, model_kwargs={"temperature": 0.1, "max_length":512,'device': 'cuda:0'})
-
-    def create_db(self,context):
+        return "OK"
+    def create_db(self, context):
         text_splitter = CharacterTextSplitter(
             separator="\n",
             chunk_size=1000,
@@ -163,11 +165,17 @@ def create_upload_files(prompt : Prompt):
     result = chatbot.result(prompt.question)
     return {"result": result}
 
-@app.post('/ocr')
-async def get_ocr_from_image(file: UploadFile = File(...)):
-    image = Image.open(io.BytesIO(await file.read()))
+# @app.post('/ocr')
+# async def get_ocr_from_image(file: UploadFile = File(...)):
+#     image = Image.open(io.BytesIO(await file.read()))
+#     text = ocr.get_ocr(image)
+#     chatbot.create_db(text)
+#     return {"result": text}
+
+@app.post('/ocrapi')
+async def get_ocr_from_pillow(file: ImgBase64):
+    image = Image.open(io.BytesIO(base64.b64decode(file.image)))
     text = ocr.get_ocr(image)
-    chatbot.create_db(text)
     return {"result": text}
 
 @app.post('/ocrapi')
@@ -176,4 +184,10 @@ async def get_ocr_from_pillow(file: ImgBase64):
     text = ocr.get_ocr(image)
     return {"result": text}
 
-
+@app.post('/changemodel')
+async def api_change_model(modelname : ModelName):
+    try:
+        chatbot.change_model(modelname.model_name)
+        return {"result" : "done"}
+    except NameError:
+        return {"error " : NameError}
