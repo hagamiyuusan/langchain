@@ -6,7 +6,7 @@ st.title(":violet[Chat Bot via Streamlit]")
 colored_header(label='', description='', color_name='gray-30')
 from PIL import Image
 from io import BytesIO
-
+import numpy as np
 import base64
 
 PORT = 13578
@@ -35,6 +35,8 @@ def generate_response(prompt):
     question = {"question": prompt}
     response = requests.post(api_url, json=question)
     return response.json()["result"]
+
+
  
 # Initialize session state variables
 if 'user_responses' not in st.session_state:
@@ -57,12 +59,12 @@ with st.sidebar:
                 content = pdf_docs.getvalue().decode("utf-8")
                 create_db(content)
             else:
-                
                 img_str = base64.b64encode(pdf_docs.getvalue()).decode("utf-8")
-                # img = Image.open(pdf_docs)
                 im = Image.open(BytesIO(base64.b64decode(img_str)))
-
+                
                 content = get_ocr(img_str)
+                st.image(im)
+                st.text_area("OCR result", content)
                 create_db(content['result'])
 with response_container:
     if user_input:

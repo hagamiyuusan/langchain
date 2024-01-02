@@ -26,7 +26,7 @@ from vietocr.tool.config import Cfg
 from paddleocr import PaddleOCR,draw_ocr
 from numpy import asarray
 import base64
-
+import gc
 class Item(BaseModel):
     content: str
 class Prompt(BaseModel):
@@ -60,12 +60,13 @@ bnb_config = transformers.BitsAndBytesConfig(
 )
  
 class LLM:
-    def __init__(self):
-        self.model_embeddings = "keepitreal/vietnamese-sbert"
+    def __init__(self, model_name = "bkai-foundation-models/vietnamese-llama2-7b-120GB",
+                 embedding_name = "keepitreal/vietnamese-sbert"):
+        self.model_embeddings = embedding_name
         self.cache_dir = '/home/huy.nguyen/langchain_template/tmp'
-        self.model_name_or_path = "bkai-foundation-models/vietnamese-llama2-7b-120GB"
+        self.model_name_or_path = model_name
         self.model_kwargs = {'device': 'cuda:0'}
- 
+
  
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name_or_path,
                                              trust_remote_code=True,
@@ -99,8 +100,29 @@ class LLM:
  
                         """
         self.prompt = PromptTemplate(template=self.prompt_template, input_variables=['context', 'question'])
- 
- 
+    
+    def change_model(self, model_name):
+        del self.model
+        del self.text_pipeline
+        del self.llm
+        self.model = AutoModelForCausalLM.from_pretrained(model_name,
+                                             trust_remote_code=True,
+                                             quantization_config=bnb_config,
+                                             token = hf_token)
+        
+        self.text_pipeline = pipeline(
+            "text-generation",
+            model=self.model,
+            tokenizer=self.tokenizer,
+            max_new_tokens=80,
+            temperature=0.1,
+            top_p=0.95,
+            repetition_penalty=1.15,
+            streamer=self.streamer,
+        )
+
+        self.llm = HuggingFacePipeline(pipeline = self.text_pipeline, model_kwargs={"temperature": 0.1, "max_length":512,'device': 'cuda:0'})
+
     def create_db(self,context):
         text_splitter = CharacterTextSplitter(
             separator="\n",
@@ -113,8 +135,10 @@ class LLM:
         docs = text_splitter.split_text(context)
         self.db = FAISS.from_texts(docs, self.embeddings)
         return self.db
+    
     def format_docs(self,docs):
         return "\n\n".join(doc.page_content for doc in docs)
+    
     def result(self, question):
         rag_chain = (
             {"context": self.db.as_retriever(search_kwargs={"k": 2}) | self.format_docs, "question": RunnablePassthrough()}
