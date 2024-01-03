@@ -37,7 +37,7 @@ def generate_response(prompt):
     return response.json()["result"]
 
 def api_change_model(model_name):
-    api_url = "http://127.0.0.1:13578/respone"
+    api_url = "http://127.0.0.1:13578/changemodel"
     question = {"model_name": model_name}
     response = requests.post(api_url, json=question)
     return response.json()["result"]
@@ -88,8 +88,9 @@ with st.sidebar:
 with response_container:
     if user_input:
         response = generate_response(user_input)
+        print(response['result'])
         st.session_state.user_responses.append(user_input)
-        st.session_state.bot_responses.append(response)
+        st.session_state.bot_responses.append(response['result'])
        
     if st.session_state['bot_responses']:
         for i in range(len(st.session_state['bot_responses'])):

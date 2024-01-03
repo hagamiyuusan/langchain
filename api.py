@@ -4,7 +4,7 @@ hf_token = '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'
 from torch import cuda, bfloat16
 import transformers
 # from langchain.memory import ConversationBufferMemory
-# from langchain.chains import RetrievalQA
+from langchain.chains import RetrievalQA
 from langchain import HuggingFacePipeline, PromptTemplate
 from torch import cuda, bfloat16
 import transformers
@@ -62,7 +62,7 @@ bnb_config = transformers.BitsAndBytesConfig(
 )
  
 class LLM:
-    def __init__(self, model_name = "bkai-foundation-models/vietnamese-llama2-7b-120GB",
+    def __init__(self, model_name = "LR-AI-Labs/vbd-llama2-7B-50b-chat",
                  embedding_name = "keepitreal/vietnamese-sbert"):
         self.model_embeddings = embedding_name
         self.cache_dir = '/home/huy.nguyen/langchain_template/tmp'
@@ -142,12 +142,16 @@ class LLM:
         return "\n\n".join(doc.page_content for doc in docs)
     
     def result(self, question):
-        rag_chain = (
-            {"context": self.db.as_retriever(search_kwargs={"k": 2}) | self.format_docs, "question": RunnablePassthrough()}
-            | self.prompt
-            | self.llm.bind(stop =["\n"])
-            | StrOutputParser())
-        return rag_chain.invoke(question)
+        qa_chain = RetrievalQA.from_chain_type(
+            llm = self.llm,
+            chain_type="stuff",
+            retriever=self.db.as_retriever(search_kwargs={"k": 2}),
+            return_source_documents=False,
+            chain_type_kwargs={"prompt": self.prompt},
+            verbose=True
+        )
+
+        return qa_chain(question)
 chatbot = LLM()
 app = FastAPI()
 ocr = OCR()
@@ -163,6 +167,7 @@ def upload(item: Item):
 @app.post('/respone')
 def create_upload_files(prompt : Prompt):
     result = chatbot.result(prompt.question)
+    print("1")
     return {"result": result}
 
 # @app.post('/ocr')
@@ -178,11 +183,11 @@ async def get_ocr_from_pillow(file: ImgBase64):
     text = ocr.get_ocr(image)
     return {"result": text}
 
-@app.post('/ocrapi')
-async def get_ocr_from_pillow(file: ImgBase64):
-    image = Image.open(io.BytesIO(base64.b64decode(file.image)))
-    text = ocr.get_ocr(image)
-    return {"result": text}
+# @app.post('/ocrapi')
+# async def get_ocr_from_pillow(file: ImgBase64):
+#     image = Image.open(io.BytesIO(base64.b64decode(file.image)))
+#     text = ocr.get_ocr(image)
+#     return {"result": text}
 
 @app.post('/changemodel')
 async def api_change_model(modelname : ModelName):
