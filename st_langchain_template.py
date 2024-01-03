@@ -18,26 +18,26 @@ def get_ocr_api(content):
     return res
 
 def get_ocr(content):
-    api_url = "http://127.0.0.1:13578/ocrapi"
+    api_url = "http://127.0.0.1:13579/ocrapi"
     question = {"image": content}
     response = requests.post(api_url, json=question)
     return response.json()
  
 def create_db(content):
-    api_url = "http://127.0.0.1:13578/upload"
+    api_url = "http://127.0.0.1:13579/upload"
     question = {"content": content}
     response = requests.post(api_url, json=question)
     return response
  
  
 def generate_response(prompt):
-    api_url = "http://127.0.0.1:13578/respone"
+    api_url = "http://127.0.0.1:13579/respone"
     question = {"question": prompt}
     response = requests.post(api_url, json=question)
     return response.json()["result"]
 
 def api_change_model(model_name):
-    api_url = "http://127.0.0.1:13578/changemodel"
+    api_url = "http://127.0.0.1:13579/changemodel"
     question = {"model_name": model_name}
     response = requests.post(api_url, json=question)
     return response.json()["result"]
@@ -74,17 +74,24 @@ with st.sidebar:
         with st.spinner("Processing"):
             if 'text/plain' in str(pdf_docs.type):
                 content = pdf_docs.getvalue().decode("utf-8")
+                st.session_state['text'] = content
+                if 'image' in st.session_state:
+                    del st.session_state['image']
                 create_db(content)
             else:
                 img_str = base64.b64encode(pdf_docs.getvalue()).decode("utf-8")
                 im = Image.open(BytesIO(base64.b64decode(img_str)))
                 
                 content = get_ocr(img_str)
-                st.image(im)
-                st.text_area("OCR result", content)
+                st.session_state['text'] = content
+                st.session_state['image'] = im
+
                 create_db(content['result'])
 
-
+    if 'text' in st.session_state:
+        st.text_area("OCR result", st.session_state['text'])
+    if 'image' in st.session_state:
+        st.image(st.session_state['image'])
 with response_container:
     if user_input:
         response = generate_response(user_input)

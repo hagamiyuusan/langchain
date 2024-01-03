@@ -73,14 +73,16 @@ class LLM:
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name_or_path,
                                              trust_remote_code=True,
                                              quantization_config=bnb_config,
-                                             token = hf_token)
+                                             token = hf_token,
+                                             device_map = 'cuda:0'
+                                             )
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name_or_path, use_fast=True, model_kwargs=self.model_kwargs, token = hf_token)
         self.streamer = TextStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
         self.text_pipeline = pipeline(
             "text-generation",
             model=self.model,
             tokenizer=self.tokenizer,
-            max_new_tokens=80,
+            max_new_tokens=512,
             temperature=0.1,
             top_p=0.95,
             repetition_penalty=1.15,
@@ -92,7 +94,7 @@ class LLM:
         self.prompt_template = """You are an expert in question and answering. Your goals is to provide user useful answer from provided knowledge. Think step by step and never ignore any step.
                         Remember:
                         - always answer in Vietnamese.
-                        - dont try to generate other answers and questions.
+                        - don't try to generate other answers and questions.
                         - to be honest if you don't know, don't try to answer.
  
                         knowledge : {context}
@@ -101,12 +103,24 @@ class LLM:
                         question : {question}
  
                         """
-        self.prompt = PromptTemplate(template=self.prompt_template, input_variables=['context', 'question'])
+        self.prompt_template1 = """Bạn là một chatbot chuyên trả lời và đọc hiểu văn bản, hãy sử dụng những thông tin dưới đây để trả lời câu hỏi ở cuối.
+        Luôn trả lời bằng tiếng Việt, không bịa ra câu trả lời, trả lời càng ngắn càng tốt.
+
+                knowledge : {context}
+
+
+                question : {question}
+
+                """
+        self.prompt = PromptTemplate(template=self.prompt_template1, input_variables=['context', 'question'])
     
     def change_model(self, model_name):
         del self.model
         del self.text_pipeline
         del self.llm
+        del self.tokenizer
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True, model_kwargs=self.model_kwargs, token = hf_token)
+
         self.model = AutoModelForCausalLM.from_pretrained(model_name,
                                              trust_remote_code=True,
                                              quantization_config=bnb_config,
@@ -116,7 +130,7 @@ class LLM:
             "text-generation",
             model=self.model,
             tokenizer=self.tokenizer,
-            max_new_tokens=80,
+            max_new_tokens=512,
             temperature=0.1,
             top_p=0.95,
             repetition_penalty=1.15,
