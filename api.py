@@ -27,6 +27,7 @@ from paddleocr import PaddleOCR,draw_ocr
 from numpy import asarray
 import base64
 import gc
+import time
 class Item(BaseModel):
     content: str
 class Prompt(BaseModel):
@@ -35,6 +36,10 @@ class ImgBase64(BaseModel):
     image: str
 class ModelName(BaseModel):
     model_name : str
+    top_k : int
+    top_p : float
+    temperature : float
+
 class OCR:
     def __init__(self):
         self.ocr = PaddleOCR(use_angle_cls=True, lang='en')
@@ -62,19 +67,25 @@ bnb_config = transformers.BitsAndBytesConfig(
 )
  
 class LLM:
-    def __init__(self, model_name = "LR-AI-Labs/vbd-llama2-7B-50b-chat",
-                 embedding_name = "keepitreal/vietnamese-sbert"):
+    def __init__(self, model_name = "bkai-foundation-models/vietnamese-llama2-7b-120GB",
+                 embedding_name = "keepitreal/vietnamese-sbert",
+                 top_k = 50,
+                 top_p = 0.9,
+                 temperature = 0.1):
+        
         self.model_embeddings = embedding_name
         self.cache_dir = '/home/huy.nguyen/langchain_template/tmp'
         self.model_name_or_path = model_name
         self.model_kwargs = {'device': 'cuda:0'}
-
+        self.top_k = top_k
+        self.top_p = top_p
+        self.temperature = temperature
  
         self.model = AutoModelForCausalLM.from_pretrained(self.model_name_or_path,
                                              trust_remote_code=True,
                                              quantization_config=bnb_config,
                                              token = hf_token,
-                                             device_map = 'cuda:0'
+                                             device_map = 'auto'
                                              )
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name_or_path, use_fast=True, model_kwargs=self.model_kwargs, token = hf_token)
         self.streamer = TextStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
@@ -82,11 +93,13 @@ class LLM:
             "text-generation",
             model=self.model,
             tokenizer=self.tokenizer,
-            max_new_tokens=512,
-            temperature=0.1,
-            top_p=0.95,
+            do_sample=True,
+            max_new_tokens = 120,
+            temperature = self.temperature,
+            top_k = self.top_k,
+            top_p = self.top_p,
             repetition_penalty=1.15,
-            streamer=self.streamer,
+            streamer=self.streamer
         )
         self.llm = HuggingFacePipeline(pipeline = self.text_pipeline, model_kwargs={"temperature": 0.1, "max_length":512,'device': 'cuda:0'})
         self.embeddings = HuggingFaceEmbeddings(model_name = self.model_embeddings,  model_kwargs = self.model_kwargs)
@@ -101,24 +114,31 @@ class LLM:
  
  
                         question : {question}
- 
                         """
-        self.prompt_template1 = """Bạn là một chatbot chuyên trả lời và đọc hiểu văn bản, hãy sử dụng những thông tin dưới đây để trả lời câu hỏi ở cuối.
-        Luôn trả lời bằng tiếng Việt, không bịa ra câu trả lời, trả lời càng ngắn càng tốt.
+        self.prompt_template1 = """Bạn là một hệ thống thông minh chuyên trả lời và đọc hiểu văn bản, hãy sử dụng những thông tin dưới đây để trả lời câu hỏi ở cuối.
+        Hãy nhớ:
+        - Luôn trả lời bằng tiếng Việt.
+        - Không bịa ra câu trả lời, trả lời càng ngắn càng tốt.
 
                 knowledge : {context}
 
 
                 question : {question}
-
+                                
                 """
         self.prompt = PromptTemplate(template=self.prompt_template1, input_variables=['context', 'question'])
     
-    def change_model(self, model_name):
-        del self.model
-        del self.text_pipeline
-        del self.llm
-        del self.tokenizer
+    def change_model(self, model_name, top_k = 50, top_p = 0.9, temperature = 0.1):
+        try:
+            del self.model
+            del self.text_pipeline
+            del self.llm
+            del self.tokenizer
+        except:
+            pass
+        self.top_k = top_k
+        self.top_p = top_p
+        self.temperature = temperature
         self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True, model_kwargs=self.model_kwargs, token = hf_token)
 
         self.model = AutoModelForCausalLM.from_pretrained(model_name,
@@ -130,9 +150,10 @@ class LLM:
             "text-generation",
             model=self.model,
             tokenizer=self.tokenizer,
-            max_new_tokens=512,
-            temperature=0.1,
-            top_p=0.95,
+            max_new_tokens = 120,
+            temperature = self.temperature,
+            top_k = self.top_k,
+            top_p = self.top_p,
             repetition_penalty=1.15,
             streamer=self.streamer,
         )
@@ -164,11 +185,13 @@ class LLM:
             chain_type_kwargs={"prompt": self.prompt},
             verbose=True
         )
-
-        return qa_chain(question)
+        start = time.time()
+        result = qa_chain(question)
+        time_cosume = time.time() - start
+        return result, time_cosume
 chatbot = LLM()
 app = FastAPI()
-ocr = OCR()
+# ocr = OCR()
 print("Completed load model")
 @app.get('/')
 def get():
@@ -179,10 +202,9 @@ def upload(item: Item):
     return {"result": "done"}
  
 @app.post('/respone')
-def create_upload_files(prompt : Prompt):
-    result = chatbot.result(prompt.question)
-    print("1")
-    return {"result": result}
+def return_respone(prompt : Prompt):
+    result, time = chatbot.result(prompt.question)
+    return {"result": result,"time": time}
 
 # @app.post('/ocr')
 # async def get_ocr_from_image(file: UploadFile = File(...)):
@@ -191,11 +213,11 @@ def create_upload_files(prompt : Prompt):
 #     chatbot.create_db(text)
 #     return {"result": text}
 
-@app.post('/ocrapi')
-async def get_ocr_from_pillow(file: ImgBase64):
-    image = Image.open(io.BytesIO(base64.b64decode(file.image)))
-    text = ocr.get_ocr(image)
-    return {"result": text}
+# @app.post('/ocrapi')
+# async def get_ocr_from_pillow(file: ImgBase64):
+#     image = Image.open(io.BytesIO(base64.b64decode(file.image)))
+#     text = ocr.get_ocr(image)
+#     return {"result": text}
 
 # @app.post('/ocrapi')
 # async def get_ocr_from_pillow(file: ImgBase64):
@@ -206,7 +228,7 @@ async def get_ocr_from_pillow(file: ImgBase64):
 @app.post('/changemodel')
 async def api_change_model(modelname : ModelName):
     try:
-        chatbot.change_model(modelname.model_name)
+        chatbot.change_model(model_name = modelname.model_name, top_k= modelname.top_k, top_p = modelname.top_p, temperature = modelname.temperature )
         return {"result" : "done"}
     except NameError:
         return {"error " : NameError}
