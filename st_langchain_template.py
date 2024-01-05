@@ -9,9 +9,8 @@ from io import BytesIO
 import numpy as np
 import base64
 from utils import get_OCR
-from streamlit_modal import Modal
 
-PORT = 13578
+PORT = 13579
 
 # def get_ocr_api(content):
 #     res = requests.post('http://10.124.69.99:10000/infer',json={'base64_image': content},
@@ -34,7 +33,7 @@ def get_text(ocr_res):
 #     return response.json()
  
 def create_db(content):
-    api_url = "http://127.0.0.1:13579/upload"
+    api_url = f"""http://127.0.0.1:13579/upload"""
     question = {"content": content}
     response = requests.post(api_url, json=question)
     return response
