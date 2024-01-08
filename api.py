@@ -67,7 +67,7 @@ bnb_config = transformers.BitsAndBytesConfig(
 )
  
 class LLM:
-    def __init__(self, model_name = "bkai-foundation-models/vietnamese-llama2-7b-120GB",
+    def __init__(self, model_name = "mistralai/Mistral-7B-v0.1",
                  embedding_name = "keepitreal/vietnamese-sbert",
                  top_k = 50,
                  top_p = 0.9,
@@ -94,20 +94,23 @@ class LLM:
             model=self.model,
             tokenizer=self.tokenizer,
             do_sample=True,
-            max_new_tokens = 120,
+            max_new_tokens = 512,
             temperature = self.temperature,
             top_k = self.top_k,
             top_p = self.top_p,
             repetition_penalty=1.15,
             streamer=self.streamer
         )
+                        #         - always answer in Vietnamese.
+                        # - don't try to generate other answers and questions.
+                        # - to be honest if you don't know, don't try to answer.
         self.llm = HuggingFacePipeline(pipeline = self.text_pipeline, model_kwargs={"temperature": 0.1, "max_length":512,'device': 'cuda:0'})
         self.embeddings = HuggingFaceEmbeddings(model_name = self.model_embeddings,  model_kwargs = self.model_kwargs)
         self.db = None
         self.prompt_template = """You are an expert in question and answering. Your goals is to provide user useful answer from provided knowledge. Think step by step and never ignore any step.
                         Remember:
                         - always answer in Vietnamese.
-                        - don't try to generate other answers and questions.
+                        - don't generate other answers and questions.
                         - to be honest if you don't know, don't try to answer.
  
                         knowledge : {context}
@@ -150,7 +153,7 @@ class LLM:
             "text-generation",
             model=self.model,
             tokenizer=self.tokenizer,
-            max_new_tokens = 120,
+            max_new_tokens = 512,
             temperature = self.temperature,
             top_k = self.top_k,
             top_p = self.top_p,

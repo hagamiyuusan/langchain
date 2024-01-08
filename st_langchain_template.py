@@ -53,7 +53,7 @@ def generate_response(prompt):
     return response.json()["result"], response.json()['time']
 
 if 'main_model' not in st.session_state:
-    st.session_state['model'] = 'LR-AI-Labs/vbd-llama2-7B-50b-chat'
+    st.session_state['model'] = 'mistralai/Mistral-7B-v0.1'
  
 # Initialize session state variables
 if 'user_responses' not in st.session_state:
