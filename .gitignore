@@ -1,1 +1,6 @@
 tmp/**
+*.zip
+data/**
+sft_mistral/results/**
+sft_mistral/wandb/**
+json/**
