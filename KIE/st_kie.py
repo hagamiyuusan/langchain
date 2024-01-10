@@ -19,7 +19,7 @@ def get_text(ocr_res):
         text += phrase['text'] + '\n'
     return text
 
-if 'main_model' not in st.session_state:
+if 'model_name' not in st.session_state:
     st.session_state['model_name'] = 'mistralai/Mistral-7B-v0.1'
 if 'model' not in st.session_state:
     st.session_state['model'] = LLMBase(model_name=st.session_state['model_name'])
@@ -108,4 +108,4 @@ with response_container:
     if st.session_state['bot_responses']:
         for i in range(len(st.session_state['bot_responses'])):
             message(st.session_state['user_responses'][i], is_user=True, key=str(i) + '_user', avatar_style="initials", seed="Kavita")
-            message(st.json(st.session_state['bot_responses'][i]), key=str(i), avatar_style="initials", seed="AI")
+            message(st.session_state['bot_responses'][i], key=str(i), avatar_style="initials", seed="AI")
