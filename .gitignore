@@ -4,3 +4,4 @@ data/**
 sft_mistral/results/**
 sft_mistral/wandb/**
 json/**
+sft_mistral/final_result/**

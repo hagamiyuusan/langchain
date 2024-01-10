@@ -18,7 +18,10 @@ from langchain.schema.runnable import RunnablePassthrough
 from langchain.chains import LLMChain
 from langchain.schema import StrOutputParser
 from PIL import Image
-from fastapi import FastAPI, File, UploadFile, BackgroundTasks
+from queue import Queue
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+
 from pydantic import BaseModel
 import io
 from vietocr.tool.predictor import Predictor
@@ -194,6 +197,7 @@ class LLM:
         return result, time_cosume
 chatbot = LLM()
 app = FastAPI()
+streamer_queue = Queue()
 # ocr = OCR()
 print("Completed load model")
 @app.get('/')

@@ -12,6 +12,7 @@ import io
 import gc
 import torch
 from langchain_experimental.llms import JsonFormer
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 model_name = "mychen76/mistral7b_ocr_to_json_v1"
 tokenizer = "mychen76/mistral7b_ocr_to_json_v1"
@@ -116,7 +117,7 @@ class LLMBase:
                     Human: {content}
                     AI ASSISTANT:
                     """.strip()
-        self.builder = JsonFormer(json_schema = self.json_schema, pipeline = self.text_pipeline)
+        self.builder = JsonFormer(json_schema = self.json_schema, pipeline = self.text_pipeline, streaming = True)
     def change_model(self, model_name, top_k = 50, top_p = 0.9, temperature = 0.1):
         try:
             del self.model

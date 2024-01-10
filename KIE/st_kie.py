@@ -108,4 +108,4 @@ with response_container:
     if st.session_state['bot_responses']:
         for i in range(len(st.session_state['bot_responses'])):
             message(st.session_state['user_responses'][i], is_user=True, key=str(i) + '_user', avatar_style="initials", seed="Kavita")
-            message(st.session_state['bot_responses'][i], key=str(i), avatar_style="initials", seed="AI")
+            message(st.json(st.session_state['bot_responses'][i]), key=str(i), avatar_style="initials", seed="AI")
