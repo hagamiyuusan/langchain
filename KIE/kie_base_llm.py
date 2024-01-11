@@ -46,7 +46,7 @@ class LLMBase:
             model=self.model,
             tokenizer=self.tokenizer,
             do_sample=True,
-            max_new_tokens = 1024,
+            max_new_tokens = 768,
             temperature = self.temperature,
             top_k = self.top_k,
             top_p = self.top_p,

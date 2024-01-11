@@ -18,6 +18,20 @@ def get_text(ocr_res):
     for phrase in phrases:
         text += phrase['text'] + '\n'
     return text
+def get_json(image_data):
+    result_ocr = get_OCR(image_data)
+    general_result = []
+    for line in result_ocr['phrases']:
+        result = []
+        text = line['text']
+        bbox = line['bbox']
+        x1, y1, x2, y2 = bbox
+        coordinates_list = [(x1, y1), (x2, y1), (x2, y2), (x1, y2)]
+        result.append(coordinates_list)
+        result.append(text)
+        general_result.append(result)
+    return general_result
+
 if 'peft' not in st.session_state:
     st.session_state['peft'] = False
 if 'model_name' not in st.session_state:
@@ -45,7 +59,7 @@ def change_model(model_name, top_k, top_p, temperature):
     st.session_state['model'].change_model(model_name=model_name, top_k=top_k, top_p=top_p, temperature=temperature)
     st.session_state['model_name'] = model_name
 def generate_response(content, peft):
-    response = st.session_state['model'].response(content, peft)
+    response = st.session_state['model'].response(content, peft = True)
     return response
 
 input_container = st.container()
@@ -77,12 +91,12 @@ with st.sidebar:
     with st.spinner("Switching model"):
         st.button('Switch model', key='switching_model',
         on_click = change_model, args=(option, st.session_state['top_k'], st.session_state['top_p'], st.session_state['temperature'] ))
-    on = st.toggle('KIE', value = False)
+    # on = st.toggle('KIE', value = False)
 
-    if on:
-        st.session_state['peft'] = True
-    if not on:
-        st.session_state['peft'] = False
+    # if on:
+    #     st.session_state['peft'] = True
+    # if not on:
+    #     st.session_state['peft'] = False
     
 
     st.subheader("Your documents")
@@ -98,17 +112,18 @@ with st.sidebar:
             else:
                 img_str = base64.b64encode(pdf_docs.getvalue()).decode("utf-8")
                 im = Image.open(BytesIO(base64.b64decode(img_str)))
-                ocr_res = get_OCR(im, preprocess=True)
-                content = get_text(ocr_res)
+                # ocr_res = get_OCR(im, preprocess=True)
+                # content = get_text(ocr_res)
+                content = get_json(im)
                 st.session_state['text'] = content
                 st.session_state['image'] = im
 
     if st.session_state['image'] is not None:
         st.image(st.session_state['image'])
     if st.session_state['text'] is not None:
-        st.download_button(label = 'Download OCR result', data = st.session_state['text'], file_name = 'result.txt', mime = 'text/plain')
-        for line in st.session_state['text'].split('\n'):
-            st.write(line)
+        st.download_button(label = 'Download OCR result', data = str(st.session_state['text']), file_name = 'result.txt', mime = 'text/plain')
+        for line in st.session_state['text']:
+            st.write(str(line))
 with response_container:
     if user_input:
         response = generate_response(user_input, peft = st.session_state['peft'])

@@ -102,7 +102,8 @@ class LLM:
             top_k = self.top_k,
             top_p = self.top_p,
             repetition_penalty=1.15,
-            streamer=self.streamer
+            streamer=self.streamer,
+            stop_sequence = ['user ','bot','User','Bot','user:','bot:','User:','Bot:'],
         )
                         #         - always answer in Vietnamese.
                         # - don't try to generate other answers and questions.
@@ -110,7 +111,7 @@ class LLM:
         self.llm = HuggingFacePipeline(pipeline = self.text_pipeline, model_kwargs={"temperature": 0.1, "max_length":512,'device': 'cuda:0'})
         self.embeddings = HuggingFaceEmbeddings(model_name = self.model_embeddings,  model_kwargs = self.model_kwargs)
         self.db = None
-        self.prompt_template = """You are an expert in question and answering. Your goals is to provide user useful answer from provided knowledge. Think step by step and never ignore any step.
+        self.prompt_template = """User: You are an expert in question and answering. Your goals is to provide user useful answer from provided knowledge. Think step by step and never ignore any step.
                         Remember:
                         - always answer in Vietnamese.
                         - don't generate other answers and questions.
@@ -120,6 +121,7 @@ class LLM:
  
  
                         question : {question}
+                        Bot:
                         """
         self.prompt_template1 = """Bạn là một hệ thống thông minh chuyên trả lời và đọc hiểu văn bản, hãy sử dụng những thông tin dưới đây để trả lời câu hỏi ở cuối.
         Hãy nhớ:
