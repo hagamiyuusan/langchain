@@ -4,7 +4,10 @@ from PIL import Image, ImageOps, ImageDraw
 from io import BytesIO
 import base64
 import requests
-
+from vietocr.tool.predictor import Predictor
+from vietocr.tool.config import Cfg
+from paddleocr import PaddleOCR,draw_ocr
+from numpy import asarray
 
 def encode_image(img_pil):
     buffered = BytesIO()
@@ -76,3 +79,22 @@ def convert_json(data):
             })
     new_d['phrases'] = new_phs
     return new_d
+class OCR:
+    def __init__(self):
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='en')
+        self.config = Cfg.load_config_from_name('vgg_transformer')
+        self.detector = Predictor(self.config)
+    def get_ocr(self, image):
+        data = asarray(image)
+        image = Image.fromarray(image)
+
+        detect = self.ocr(data, cls = True)
+        boxes = [line for line in detect[0]]
+        result = ""
+        for box in boxes:
+            top_left     = (int(box[0][0]), int(box[0][1]))
+            bottom_right = (int(box[2][0]), int(box[2][1]))
+            bounding_box = (top_left[0], top_left[1], bottom_right[0], bottom_right[1])
+            result += self.detector.predict(image.crop(bounding_box), return_prob=False)
+            result += " "
+        return result

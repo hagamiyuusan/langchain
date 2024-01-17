@@ -8,16 +8,21 @@ import time
 from PIL import Image
 import numpy as np
 import requests
-from utils import get_OCR
+from resources import birth_schema, birth_examples, examples_passport, schema_passport
+from utils import get_OCR, OCR
 bnb_config = transformers.BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type='nf4',
     bnb_4bit_use_double_quant=True,
     bnb_4bit_compute_dtype=bfloat16
 )
+ocr = OCR()
 import io
 import base64
 count = 0
+
+
+
 data_points = """
         {
         "current_institute": "name of the hospital or clinic issuing the prescription",
@@ -38,7 +43,7 @@ data_points = """
         "doctor_name": "doctor full name",
         }
         """
-examples = """"
+examples = """
                 Human: BỆNH VIỆN VIETT ĐỨC Số toa: 71 Nhà thuốc Bệnh viện Số điện thoại: 02435766328 Năm sinh: 1963 15A-Phương Mai-Đống Đa-Hà Nội PHIÊU THU TIỀN Xuất từ: Quầy Thuốc 1 In: Quầy Thuốc Lần in: 1 Giờ in: 08:15:54 Họ tên bệnh nhân: LÊ NGỌC LAN Mã bệnh nhân: 0029212798 Bác sĩ khám bệnh: Ths.BS TRỊNH MINH TRANG TT Tên mặt hàng ĐVT SL Đơn giá Thành tiền Spulit 100mg Viên 60 17.655 1.059.300 2 Ziaja Med Anti-imperfections Formula Cleansing Body Gel (Gel tắm ngừa khuẩn) 400ml Chai 1 499.460 499.460 3 Notis Antidanruff Shampoo 125ml Chai 2 248.600 497.200 4 Amisea 167mg Viên 30 6.420 192.600 5 Cafunten 10g Tuýp 4 6.527 26.108 Tổng khoản: 5 Tổng tiền: 2.274.668 Bằng chữ: Hai triệu hai trăm bảy mượi bốn nghìn sáu trăm sáu mươi tám đồng. Ngày 26 tháng 04 năm 2022 Người thu tiền Người nhận thuốc ngay trong ngày Lưu Trường hợp khách hàng có đơn tài chính đề nghị lấy (Quá ngày Bệnh viện không với nhân viên (Ký, họ tên) (Ký, họ tên) nhà thuốc để được hướng dẫn) Trân trọng cảm ơn Quý khách đã mua thuốc tại Bệnh viện. NGUYỄN HÀ MY LÊ NGỌC LAN
                 AI ASSISTANT: {"current_institute": "BỆNH VIỆN VIỆT ĐỨC", "name": "LÊ NGỌC LAN", "gender": "", "birth": "1963", "age": "", "address": "", "tel_customer": "", "id_bhyt": "", "diagnosis": "", "drugs": [{"drug_name": "Spulit 100mg", "drug_dose": "", "drug_quantity": "60 Viên"}, {"drug_name": "Ziaja Med Anti-imperfections Formula Cleansing Body Gel (Gel tắm ngừa khuẩn) 400ml", "drug_dose": "", "drug_quantity": "1 Chai"}, {"drug_name": "Notis Antidanruff Shampoo 125ml", "drug_dose": "", "drug_quantity": "2 Chai"}, {"drug_name": "Amisea 167mg", "drug_dose": "", "drug_quantity": "30 Viên"}, {"drug_name": "Cafunten 10g", "drug_dose": "", "drug_quantity": "4 Tuýp"}], "date_in": "Ngày 26 tháng 04 năm 2022", "doctor_name": "Ths.BS TRỊNH MINH TRANG"} END
            
@@ -50,8 +55,8 @@ examples = """"
                
 """
 template = """
-                You are an AI Assistant in the medical field. Your goal is to provide the Human with information extracted from the Human"s prescription. Think step by step and never skip any step.
-                Please try to extract all data points. Do not add or omit any information. If you don"t know, just answer "don"t know" and do not include information that is not in the document in your answer.
+                You are an AI Assistant in general field. Your goal is to provide the Human with informations extracted from the Human's document. Think step by step and never skip any step.
+                Please try to extract all data points. Do not add or omit any information. If you don't know, just answer "don't know" and do not include information that is not in the document in your answer.
                 {data_points}
                
                 EXAMPLES
@@ -105,6 +110,7 @@ def predict(message, history):
     global examples
     global template
     formatted_template = template.format(data_points = data_points, examples = examples, content = message)
+    print(formatted_template)
     # messages = "".join(["".join(["\n<human>:"+item[0], "\n<bot>:"+item[1]])  #curr_system_message +
     #             for item in history_transformer_format])
     model_inputs = tokenizer([formatted_template], return_tensors="pt").to("cuda")
@@ -139,22 +145,24 @@ with gr.Blocks() as demo:
     with gr.Row():
         with gr.Column(scale=1):
             image_input = gr.Image(label="Upload Image")
-            convert_button = gr.Button("Convert to Base64")
-            output_textbox = gr.Textbox(label="Base64 String", interactive=False, show_copy_button = True)
-            convert_button.click(fn=image_to_base64, inputs=image_input, outputs=output_textbox)
-        with gr.Column(scale=2):
-            data_points_text_box = gr.Interface(
-                title="Update Schemas",
-                fn=update_data_points, 
-                inputs="text", 
-                outputs=None
-                )
-            examples_text_box = gr.Interface(
-                title="Update Examples",
-                fn=update_examples,
-                inputs="text",
-                outputs=None
-            )
+            convert_button = gr.Button("Get OCR Text")
+            output_textbox = gr.Textbox(label="OCR Result", interactive=False, show_copy_button = True)
+            convert_button.click(fn=ocr.get_ocr, inputs=image_input, outputs=output_textbox)
 
-        gr.ChatInterface(predict)
+        
+        with gr.Column(scale=2):
+            data_points_input = gr.Textbox(label="Enter your Schema", value=data_points)
+            data_points_button = gr.Button("Update Data Points")
+            data_points_button.click(fn=update_data_points, inputs=data_points_input, outputs=None)
+
+
+            examples_input = gr.Textbox(label="Enter your Examples", value=examples)
+            examples_button = gr.Button("Update Examples")
+            examples_button.click(fn=update_examples, inputs=examples_input, outputs=None)
+            
+            
+            gr.Examples(
+            [[schema_passport, examples_passport], [data_points, examples],[birth_schema, birth_examples]],
+            [data_points_input, examples_input])
+            gr.ChatInterface(predict)
 demo.launch()
