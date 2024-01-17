@@ -8,3 +8,4 @@ sft_mistral/final_result/**
 sft_mistral/merged_model/**
 sft_mistral/mistralai-Code-Instruct-Finetune-test/**
 sft_mistral/outputs/**
+convert_model/**
