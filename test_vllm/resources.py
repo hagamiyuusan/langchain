@@ -39,8 +39,8 @@ birth_schema = """
 }
 """
 birth_examples = """
-	Human: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM Độc lập - Tự do - Hạnh phúc thái Số: 158 GIẤY KHAI SINH (BÁN SAO) Họ, chữ đệm, tên: huỳnh thị tú trinh Ngày, tháng, năm sinh: 01/01/1990 - ghi bằng chữ: Ngày một, tháng một, năm một ngàn chín trăm chín mươi - Giới tính: Nữa Dân tộc: Kinh Quốc tịch: Việt Nam Nơi sinh: Bảo sanh Long Đất, tỉnh Bà Rịa - Vũng Tàu Quê quán: Số định danh cá nhân: Họ, chữ đệm, tên người mẹ: bùi THị TỐT Năm sinh: 1968 Dân tộc: Kinh Quốc tịch: Việt Nam Xã Nơi cư trú: Áp Thanh Long, xã Phước Thạnh, huyện Long Đất, tỉnh Bà Rịa ? Vũng Tàu Nhà Nhau Họ, chữ đệm, tên người cha: huỳnh văn sa Năm sinh: 1967 Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Áp. Tường Thành, xã Phước Long Thọ, huyện Long Đất, tỉnh Bà Rịa ? Vũng Tàu Họ, chữ đệm, tên người đi khai sinh: Giấy tờ tùy thân: Nơi đăng ký khai sinh: Ủy ban nhân dân xã Phước Long Thọ, huyện Long Đất, tỉnh Bà Rịa Nhà Nhà Nhiều Vũng Tàu Ngày, tháng, năm đăng ký: 19/8/1996 NGƯỜI KÝ GIÁY KHAI SINH (Đã ký) Sao từ Sổ đăng ký khai sinh TỈNH BÀ RỊA - VŨNG TÀU Đất Đỏ, ngày 0 9 tháng 6 năm 2023 HUBND HUYỆN ĐẤT ĐỎ NGƯỜI KÝ Thuật (Ký, ghi rõ họ, tên, chức vụ và đóng dấu) Số: 69/GKS-BS KT. CHỦ TỊCH PHÓ CHỦ TỊCH BÊN ĐÁ Bằng Như Vàng Trị 
-	AI ASSISTANT:{
+	Input: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM Độc lập - Tự do - Hạnh phúc thái Số: 158 GIẤY KHAI SINH (BÁN SAO) Họ, chữ đệm, tên: huỳnh thị tú trinh Ngày, tháng, năm sinh: 01/01/1990 - ghi bằng chữ: Ngày một, tháng một, năm một ngàn chín trăm chín mươi - Giới tính: Nữa Dân tộc: Kinh Quốc tịch: Việt Nam Nơi sinh: Bảo sanh Long Đất, tỉnh Bà Rịa - Vũng Tàu Quê quán: Số định danh cá nhân: Họ, chữ đệm, tên người mẹ: bùi THị TỐT Năm sinh: 1968 Dân tộc: Kinh Quốc tịch: Việt Nam Xã Nơi cư trú: Áp Thanh Long, xã Phước Thạnh, huyện Long Đất, tỉnh Bà Rịa ? Vũng Tàu Nhà Nhau Họ, chữ đệm, tên người cha: huỳnh văn sa Năm sinh: 1967 Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Áp. Tường Thành, xã Phước Long Thọ, huyện Long Đất, tỉnh Bà Rịa ? Vũng Tàu Họ, chữ đệm, tên người đi khai sinh: Giấy tờ tùy thân: Nơi đăng ký khai sinh: Ủy ban nhân dân xã Phước Long Thọ, huyện Long Đất, tỉnh Bà Rịa Nhà Nhà Nhiều Vũng Tàu Ngày, tháng, năm đăng ký: 19/8/1996 NGƯỜI KÝ GIÁY KHAI SINH (Đã ký) Sao từ Sổ đăng ký khai sinh TỈNH BÀ RỊA - VŨNG TÀU Đất Đỏ, ngày 0 9 tháng 6 năm 2023 HUBND HUYỆN ĐẤT ĐỎ NGƯỜI KÝ Thuật (Ký, ghi rõ họ, tên, chức vụ và đóng dấu) Số: 69/GKS-BS KT. CHỦ TỊCH PHÓ CHỦ TỊCH BÊN ĐÁ Bằng Như Vàng Trị 
+	Output:``` {
     "personal_information": {
         "full_name": "huỳnh thị tú trinh",
         "date_of_birth": {
@@ -77,10 +77,10 @@ birth_examples = """
         "issue_date": "09/06/2023",
         "document_number": "69/GKS-BS"
     }
-} END
+} ```
 
-	Human: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM Độc lập - Tự do - Hạnh phúc Số: 390 GIẤY KHAI SINH (BẢN SAO) Họ, chữ đệm, tên: NGUYỄN VĂN LỢI Ngày, tháng, năm sinh: 02/7/1990 - ghi bằng chữ: Ngày hai, tháng bảy, năm một ngàn chín trăm chín mươi Giới tính: Nam Dân tộc: Kinh Quốc tịch: Việt Nam Nơi sinh: Trạm xá Phước Hải, huyện Long Đất, tỉnh Đồng Nai Quê quán Số định danh cá nhân: Họ, chữ đệm, tên người mẹ: PHAN THỊ Được Năm sinh: 1963 Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Áp Hội Mỹ, xã Phước Long Hội, huyện Long Đất, tỉnh Đồng Nai Họ, chữ đệm, tên người cha: nguyễn qua Năm sinh: 1959 - Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Ấp Hội Mỹ, xã Phước Long Hội, huyện Long Đất, tỉnh Đồng Nai Họ, chữ đệm, tên người đi khai sinh: Giấy tờ tùy thân: Thuật Nơi đăng ký khai sinh: Ủy ban nhân dân xã Phước Long Hội, huyện Long Đất, tỉnh Đồng Nai Nhân Thuận Ngày, tháng, năm đăng ký: 07/8/1990 NGƯỜI KÝ GIẤY KHAI SINH (Đã ký) Sao từ Sổ đăng ký khai sinh TỈNH BÀ RỊA - VŨNG TÀU Đất Đỏ, ngày 09 tháng 6 năm 2023 UBND HUYỆN ĐẤT ĐỎ NGƯỜI KÝ (Kỷ, ghi rõ họ, tên, chức vụ và đóng dấu) Số: 20/GKS-BS KT. CHỦ TỊCH PHÓ CHỦ TỊCH VIỆN ĐA Như Vàng 
-	AI ASSISTANT: {
+	Input: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM Độc lập - Tự do - Hạnh phúc Số: 390 GIẤY KHAI SINH (BẢN SAO) Họ, chữ đệm, tên: NGUYỄN VĂN LỢI Ngày, tháng, năm sinh: 02/7/1990 - ghi bằng chữ: Ngày hai, tháng bảy, năm một ngàn chín trăm chín mươi Giới tính: Nam Dân tộc: Kinh Quốc tịch: Việt Nam Nơi sinh: Trạm xá Phước Hải, huyện Long Đất, tỉnh Đồng Nai Quê quán Số định danh cá nhân: Họ, chữ đệm, tên người mẹ: PHAN THỊ Được Năm sinh: 1963 Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Áp Hội Mỹ, xã Phước Long Hội, huyện Long Đất, tỉnh Đồng Nai Họ, chữ đệm, tên người cha: nguyễn qua Năm sinh: 1959 - Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Ấp Hội Mỹ, xã Phước Long Hội, huyện Long Đất, tỉnh Đồng Nai Họ, chữ đệm, tên người đi khai sinh: Giấy tờ tùy thân: Thuật Nơi đăng ký khai sinh: Ủy ban nhân dân xã Phước Long Hội, huyện Long Đất, tỉnh Đồng Nai Nhân Thuận Ngày, tháng, năm đăng ký: 07/8/1990 NGƯỜI KÝ GIẤY KHAI SINH (Đã ký) Sao từ Sổ đăng ký khai sinh TỈNH BÀ RỊA - VŨNG TÀU Đất Đỏ, ngày 09 tháng 6 năm 2023 UBND HUYỆN ĐẤT ĐỎ NGƯỜI KÝ (Kỷ, ghi rõ họ, tên, chức vụ và đóng dấu) Số: 20/GKS-BS KT. CHỦ TỊCH PHÓ CHỦ TỊCH VIỆN ĐA Như Vàng 
+	Output:``` {
     "personal_information": {
         "full_name": "NGUYỄN VĂN LỢI",
         "date_of_birth": {
@@ -117,9 +117,9 @@ birth_examples = """
         "issue_date": "09/06/2023",
         "document_number": "20/GKS-BS"
     }
-} END
-	Human: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM Độc lập - Tự do - Hạnh phúc Số: 178 GIẤY KHAI SINH (BÁN SAO) Xã Họ, chữ đệm, tên: đặng minh lai nam Ngày, tháng, năm sinh: 09/12/1984 - ghi bằng chữ: Ngày chín, tháng mười hai, năm một ngàn chín trăm tám mươi tư này Giới tính: Nam Dân tộc: Kinh Quốc tịch: Việt Nam Xã Nơi sinh: Xã Phước Hải, huyện Long Đất, tỉnh Đồng Nai Nam Quê quán: Số định danh cá nhân: Họ, chữ đệm, tên người mẹ: Đặng THị MIÊN Năm sinh: 1965 Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Ấp Hội Mỹ, xã Phước Long Hội, huyện Long Đất, tinh Đồng Nai Họ, chữ đệm, tên người cha: nguyễn văn hải Năm sinh: 1963 Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Áp Phước Thới, xã Phước Long Thọ, huyện Long Đất, tỉnh Đồng Nai Xã Họ, chữ đệm, tên người đi khai sinh: nhau Giấy tờ tùy thân: Nơi đăng ký khai sinh: Ủy ban nhân dân xã Phước Long Hội, huyện Long Đất, tỉnh Đồng Nai Ngày, tháng, năm đăng ký: 26/5/1986 NGƯỜI KÝ GIẤY KHAI SINH (Đã ký) TỈNH BÀ RỊA - VŨNG TÀU Sao từ Sổ đăng ký khai sinh 19 Đất Đỏ, ngày 09 tháng 6 năm 2023 UBND HUYỆN ĐẤT ĐỎ NGƯỜI KÝ (Ký, ghi rõ họ, tên, chức vụ và đóng dấu) Số: 76/GKS-BS KT.CHỦ TỊCH PHÓ CHỦ TỊCH Như Vàng 
-	AI ASSISTANT: {
+} ```
+	Input: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM Độc lập - Tự do - Hạnh phúc Số: 178 GIẤY KHAI SINH (BÁN SAO) Xã Họ, chữ đệm, tên: đặng minh lai nam Ngày, tháng, năm sinh: 09/12/1984 - ghi bằng chữ: Ngày chín, tháng mười hai, năm một ngàn chín trăm tám mươi tư này Giới tính: Nam Dân tộc: Kinh Quốc tịch: Việt Nam Xã Nơi sinh: Xã Phước Hải, huyện Long Đất, tỉnh Đồng Nai Nam Quê quán: Số định danh cá nhân: Họ, chữ đệm, tên người mẹ: Đặng THị MIÊN Năm sinh: 1965 Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Ấp Hội Mỹ, xã Phước Long Hội, huyện Long Đất, tinh Đồng Nai Họ, chữ đệm, tên người cha: nguyễn văn hải Năm sinh: 1963 Dân tộc: Kinh Quốc tịch: Việt Nam Nơi cư trú: Áp Phước Thới, xã Phước Long Thọ, huyện Long Đất, tỉnh Đồng Nai Xã Họ, chữ đệm, tên người đi khai sinh: nhau Giấy tờ tùy thân: Nơi đăng ký khai sinh: Ủy ban nhân dân xã Phước Long Hội, huyện Long Đất, tỉnh Đồng Nai Ngày, tháng, năm đăng ký: 26/5/1986 NGƯỜI KÝ GIẤY KHAI SINH (Đã ký) TỈNH BÀ RỊA - VŨNG TÀU Sao từ Sổ đăng ký khai sinh 19 Đất Đỏ, ngày 09 tháng 6 năm 2023 UBND HUYỆN ĐẤT ĐỎ NGƯỜI KÝ (Ký, ghi rõ họ, tên, chức vụ và đóng dấu) Số: 76/GKS-BS KT.CHỦ TỊCH PHÓ CHỦ TỊCH Như Vàng 
+	Output:``` {
     "personal_information": {
         "full_name": "đặng minh lai nam",
         "date_of_birth": {
@@ -156,7 +156,7 @@ birth_examples = """
         "issue_date": "09/06/2023",
         "document_number": "76/GKS-BS"
     }
-} END
+}```
 """
 
 schema_passport = """
@@ -176,8 +176,8 @@ schema_passport = """
 """
 examples_passport = """
 
-            Human: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM - SOCIALIST REPUBLIC OF VIETNAM PHỘ CHIẾU/PASSPORT Loại/Type Mã số /Code Số hộ chiếu / Passport N? P VNM N2449849 Họ và tên/Full name NGUYỄN HỮU CẦN Quốc tịch / Nationality VIẾT NAM /VIETNAMESE Ngày sinh/Date ofbirth Nơi sinh / Place of birth 01/01/1979 BA RIÁ - VÙNG TÀU Giới tính/Sex Số GCMND /ID card N3 NAMIM Ngày cấp/Date ofissue 19 Có giá trị đến 1 Date ofexpiry 1011/2021 1011/2022 Nơi cấp/Place ofissue Gia-oac-tay Jakarta IN 1990 THE IN ANNALIA UVENZZUINZPANERATION CONCERATION CONCECTIONALISTICALLY kkkko22 
-            AI ASSISTANT:{
+    Input: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM - SOCIALIST REPUBLIC OF VIETNAM PHỘ CHIẾU/PASSPORT Loại/Type Mã số /Code Số hộ chiếu / Passport N? P VNM N2449849 Họ và tên/Full name NGUYỄN HỮU CẦN Quốc tịch / Nationality VIẾT NAM /VIETNAMESE Ngày sinh/Date ofbirth Nơi sinh / Place of birth 01/01/1979 BA RIÁ - VÙNG TÀU Giới tính/Sex Số GCMND /ID card N3 NAMIM Ngày cấp/Date ofissue 19 Có giá trị đến 1 Date ofexpiry 1011/2021 1011/2022 Nơi cấp/Place ofissue Gia-oac-tay Jakarta IN 1990 THE IN ANNALIA UVENZZUINZPANERATION CONCERATION CONCECTIONALISTICALLY kkkko22 
+    Output:``` {
         "passport_number": "N2449849",
         "country_code": "VNM",
         "full_name": "NGUYỄN HỮU CẦN",
@@ -191,8 +191,8 @@ examples_passport = """
         "place_of_issue": "Gia-oac-tay Jakarta"
         } END
 
-            Human: Mã sốyCode Sẽ hồ chiều TPassport Nam PHÓ CHIỀU PASSPORTS Loại/Type 02449798 P VNM Ho và tên V Full name Vothanh vu Quốc tích VNationality 1 VIRTNAM/VIETNAMESE Noav sinhVVDate of birth Nơi sinh IPlace of birth 0101/1987 KENGIANG Giới tính I Sex Số GCMND 1 ID cardM NAM/M Ngày cập/Date ofissue 19 Có giá trị đến / Date of expiry 204/11/2021 04711/2022 Nơi cấp/Place ofissue Gia-cac-ta V Jakarta 
-            AI ASSISTANT:{
+    Input: Mã sốyCode Sẽ hồ chiều TPassport Nam PHÓ CHIỀU PASSPORTS Loại/Type 02449798 P VNM Ho và tên V Full name Vothanh vu Quốc tích VNationality 1 VIRTNAM/VIETNAMESE Noav sinhVVDate of birth Nơi sinh IPlace of birth 0101/1987 KENGIANG Giới tính I Sex Số GCMND 1 ID cardM NAM/M Ngày cập/Date ofissue 19 Có giá trị đến / Date of expiry 204/11/2021 04711/2022 Nơi cấp/Place ofissue Gia-cac-ta V Jakarta 
+    Output:``` {
         "passport_number": "02449798",
         "country_code": "VNM",
         "full_name": "Vothanh vu",
@@ -204,10 +204,10 @@ examples_passport = """
         "date_of_issue": "04/11/2021",
         "date_of_expiry": "04/11/2022",
         "place_of_issue": "Gia-cac-ta V Jakarta"
-        }END
+        } ```
 
-            Human : PHÔ CHIỀU/PASSPORT Loai/Type Mã số/Code Số hộ chiếu /Passport N? N2449819 P VNM Ho và tên /Full name CAO HOANG NAM Quốc tịch / Nationality VIẾT NAM/VIETNAMESE Ngày sinh/Date ofbirth Nơi sinh /Place of birth 30/09/2001 KIENGIANGV 3 Giới tính/Sex Số GCMND/IDcard N ANAMIAM Ngày cấp /Date ofissue Có giá trị đến/Date ofexpiry 04/11/2021 04/11/2022 Nơi cấp / Place ofissue Gia-các-ta V Jakarta
-            AI ASSISTANT:{
+    Input : PHÔ CHIỀU/PASSPORT Loai/Type Mã số/Code Số hộ chiếu /Passport N? N2449819 P VNM Ho và tên /Full name CAO HOANG NAM Quốc tịch / Nationality VIẾT NAM/VIETNAMESE Ngày sinh/Date ofbirth Nơi sinh /Place of birth 30/09/2001 KIENGIANGV 3 Giới tính/Sex Số GCMND/IDcard N ANAMIAM Ngày cấp /Date ofissue Có giá trị đến/Date ofexpiry 04/11/2021 04/11/2022 Nơi cấp / Place ofissue Gia-các-ta V Jakarta
+    Output:``` {
         "passport_number": "N2449819",
         "passport_type": "P",
         "country_code": "VNM",
@@ -220,6 +220,6 @@ examples_passport = """
         "date_of_issue": "04/11/2021",
         "date_of_expiry": "04/11/2022",
         "place_of_issue": "Gia-các-ta V Jakarta"
-        } END
+        } ```
 
 """
