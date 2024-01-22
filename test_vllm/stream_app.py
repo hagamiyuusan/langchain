@@ -173,6 +173,12 @@ def update_data_points(input_text):
 def update_examples(input_text):
     global examples
     examples = input_text
+def update_prompt(schema_des, examples_des):
+    global data_points
+    global examples
+    data_points = schema_des    
+    examples = examples_des
+
 model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1",
                                             trust_remote_code=True,
                                             quantization_config=bnb_config,
@@ -249,9 +255,6 @@ with gr.Blocks() as demo:
             convert_button = gr.Button("Get OCR Text")
             output_textbox = gr.Textbox(label="OCR Result", interactive=False, show_copy_button = True)
             convert_button.click(fn=image_to_base64, inputs=image_input, outputs=output_textbox)
-
-        
-        with gr.Column(scale=2):
             data_points_input = gr.Textbox(label="Enter your Schema", value=data_points)
             data_points_button = gr.Button("Update Schema")
             data_points_button.click(fn=update_data_points, inputs=data_points_input, outputs=None)
@@ -260,10 +263,14 @@ with gr.Blocks() as demo:
             examples_input = gr.Textbox(label="Enter your Examples", value=examples)
             examples_button = gr.Button("Update Examples")
             examples_button.click(fn=update_examples, inputs=examples_input, outputs=None)
-            
-            
             gr.Examples(
             [[schema_passport, examples_passport], [data_points, examples],[birth_schema, birth_examples]],
-            [data_points_input, examples_input])
+            [data_points_input, examples_input],
+            fn=update_prompt,
+            run_on_click=True)
+
+        
+        with gr.Column(scale=2):
+
             gr.ChatInterface(predict)
-demo.launch(server_name="0.0.0.0",server_port = 8001)
+demo.launch(server_name="0.0.0.0",server_port = 8001, share = True)
