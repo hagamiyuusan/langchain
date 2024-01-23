@@ -159,7 +159,7 @@ birth_examples = """
 }```
 """
 
-schema_passport = """
+passport_schema = """
 {
   "passport_number": "Unique identifier of the passport",
   "country_code": "ISO code of the issuing country",
@@ -174,7 +174,7 @@ schema_passport = """
   "place_of_issue": "Location where the passport was issued"
 }
 """
-examples_passport = """
+passport_examples = """
 
     Input: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM - SOCIALIST REPUBLIC OF VIETNAM PHỘ CHIẾU/PASSPORT Loại/Type Mã số /Code Số hộ chiếu / Passport N? P VNM N2449849 Họ và tên/Full name NGUYỄN HỮU CẦN Quốc tịch / Nationality VIẾT NAM /VIETNAMESE Ngày sinh/Date ofbirth Nơi sinh / Place of birth 01/01/1979 BA RIÁ - VÙNG TÀU Giới tính/Sex Số GCMND /ID card N3 NAMIM Ngày cấp/Date ofissue 19 Có giá trị đến 1 Date ofexpiry 1011/2021 1011/2022 Nơi cấp/Place ofissue Gia-oac-tay Jakarta IN 1990 THE IN ANNALIA UVENZZUINZPANERATION CONCERATION CONCECTIONALISTICALLY kkkko22 
     Output:``` {
@@ -223,3 +223,135 @@ examples_passport = """
         } ```
 
 """
+medical_schema = """
+        {
+        "current_institute": "name of the hospital or clinic issuing the prescription",
+        "name": "patient full name",
+        "gender": "patient's gender",
+        "birth": "date of birth",
+        "age": "patient's age",
+        "address": "patient's address",
+        "tel_customer": "patient phone number",
+        "id_bhyt": "health insurance card number",
+        "diagnosis": "diagnosis",
+        "drugs": [{
+            "drug_name": "drug name",
+            "drug_dose": "drug dosage, usage and instructions",
+            "drug_quantity": "drug duantity"
+        }],
+        "date_in": "issued date",
+        "doctor_name": "doctor full name",
+        }
+        """
+medical_examples = """
+                Input: BỆNH VIỆN VIETT ĐỨC Số toa: 71 Nhà thuốc Bệnh viện Số điện thoại: 02435766328 Năm sinh: 1963 15A-Phương Mai-Đống Đa-Hà Nội PHIÊU THU TIỀN Xuất từ: Quầy Thuốc 1 In: Quầy Thuốc Lần in: 1 Giờ in: 08:15:54 Họ tên bệnh nhân: LÊ NGỌC LAN Mã bệnh nhân: 0029212798 Bác sĩ khám bệnh: Ths.BS TRỊNH MINH TRANG TT Tên mặt hàng ĐVT SL Đơn giá Thành tiền Spulit 100mg Viên 60 17.655 1.059.300 2 Ziaja Med Anti-imperfections Formula Cleansing Body Gel (Gel tắm ngừa khuẩn) 400ml Chai 1 499.460 499.460 3 Notis Antidanruff Shampoo 125ml Chai 2 248.600 497.200 4 Amisea 167mg Viên 30 6.420 192.600 5 Cafunten 10g Tuýp 4 6.527 26.108 Tổng khoản: 5 Tổng tiền: 2.274.668 Bằng chữ: Hai triệu hai trăm bảy mượi bốn nghìn sáu trăm sáu mươi tám đồng. Ngày 26 tháng 04 năm 2022 Người thu tiền Người nhận thuốc ngay trong ngày Lưu Trường hợp khách hàng có đơn tài chính đề nghị lấy (Quá ngày Bệnh viện không với nhân viên (Ký, họ tên) (Ký, họ tên) nhà thuốc để được hướng dẫn) Trân trọng cảm ơn Quý khách đã mua thuốc tại Bệnh viện. NGUYỄN HÀ MY LÊ NGỌC LAN
+                Output:``` {
+                    "current_institute": "BỆNH VIỆN VIỆT ĐỨC",
+                    "name": "LÊ NGỌC LAN",
+                    "gender": "",
+                    "birth": "1963",
+                    "age": "",
+                    "address": "",
+                    "tel_customer": "",
+                    "id_bhyt": "",
+                    "diagnosis": "",
+                    "drugs": [
+                        {
+                            "drug_name": "Spulit 100mg",
+                            "drug_dose": "",
+                            "drug_quantity": "60 Viên"
+                        },
+                        {
+                            "drug_name": "Ziaja Med Anti-imperfections Formula Cleansing Body Gel (Gel tắm ngừa khuẩn) 400ml",
+                            "drug_dose": "",
+                            "drug_quantity": "1 Chai"
+                        },
+                        {
+                            "drug_name": "Notis Antidanruff Shampoo 125ml",
+                            "drug_dose": "",
+                            "drug_quantity": "2 Chai"
+                        },
+                        {
+                            "drug_name": "Amisea 167mg",
+                            "drug_dose": "",
+                            "drug_quantity": "30 Viên"
+                        },
+                        {
+                            "drug_name": "Cafunten 10g",
+                            "drug_dose": "",
+                            "drug_quantity": "4 Tuýp"
+                        }
+                    ],
+                    "date_in": "Ngày 26 tháng 04 năm 2022",
+                    "doctor_name": "Ths.BS TRỊNH MINH TRANG"
+                } ```
+           
+                Input: ! Mã BN:2101002494 Số: 211002020 Mã hồ sơ: 2110150077 Kho:110-Kho Ngoại trú ĐƠN THUỐC BẢO HIỂM KKB.43333 Giới tính: Nam Đối tượng: Số thẻ BHYT: CK2383820079366 Địa chỉ: Lê Hoàn 2, Điện Biên, Thành phố Thanh Hóa, Tỉnh Thanh Hóa, Việt Nam Chẩn đoán: E11-Bệnh đái tháo đường không phụ thuộc insuline/ E78-1 Rối loạn chuyển Phòng: Phòng khám 326 Họ tên: LÊ HỒNG KHANH hóa lipoprotein và tình trạng tăng lipid máu khác / Bảo Hiểm Nơi ĐK KCB BĐ: 38280 Ngày sinh: 18/06/1956 Tuổi: 65 SĐT: 0912 660 254 STT Tên thuốc- Cách dùng ĐVT Số lượng BETICAPO 750 SR-750mg (Metformin) Ngày uống 1 viên sau ăn chiều. Viên 60 2 Gliclada 60mg modified- release tablets (Gliclazid) 3 Ngày uống 2 viên trước ăn sáng 30 phút TV. Fenofibrat- 200mg (Fenofibrat) Viên 120 Uống tối 1 viên ngay sau ăn Viên 60 Cộng khoản: 3 loại Lưu Khám lại khi thấy bất thường và khi hết thuốc. Kế toán Thủ kho Người bệnh Ngày 15 tháng 10 năm 2021 Bác sĩ khám (Ký và ghi rõ họ, tên) (Ký và ghi rõ họ, tên) Khih Lê Văn Chinh ISOFH-Người in: Lê Văn Chinh, ngày in: 15/10/2021 08:24
+                Output:``` {
+                    "current_institute": "",
+                    "patient_name": "LÊ HỒNG KHANH",
+                    "gender": "Nam",
+                    "birth": "18/06/1956",
+                    "age": "65",
+                    "address": "Lê Hoàn 2, Điện Biên, Thành phố Thanh Hóa, Tỉnh Thanh Hóa, Việt Nam",
+                    "tel_customer": "0912 660 254",
+                    "id_bhyt": "CK2383820079366",
+                    "diagnosis": "E11 - Bệnh đái tháo đường không phụ thuộc insuline / E78 - Rối loạn chuyển hóa lipoprotein và tình trạng tăng lipid máu khác",
+                    "drugs": [
+                        {
+                            "drug_name": "BETICAPO 750 SR-750mg (Metformin)",
+                            "drug_dose": "Ngày uống 1 viên sau ăn chiều",
+                            "drug_quantity": "60 Viên"
+                        },
+                        {
+                            "drug_name": "Gliclada 60mg modified-release tablets (Gliclazid)",
+                            "drug_dose": "Ngày uống 2 viên trước ăn sáng 30 phút",
+                            "drug_quantity": "120 viên"
+                        },
+                        {
+                            "drug_name": "Fenofibrat-200mg (Fenofibrat)",
+                            "drug_dose": "Uống tối 1 viên ngay sau ăn",
+                            "drug_quantity": "60 viên"
+                        }
+                    ],
+                    "date_in": "Ngày 15 tháng 10 năm 2021",
+                    "doctor_name": "Lê Văn Chinh"
+                } ```
+           
+                Input: Tp.HCM Xem tóm tăt bệnh án Bệnh viện Da Liễu ĐT: (028) 39308131 Mã BN: 22368078 P.khám 7 ĐƠN THUỐC ĐT: 0965839049 Họ và tên: TRỊNH PHẠM KIỀU NGA. 18 tháng. Nữ Địa chỉ: ,,Xã Tân Tây,Huyện Gò Công Đông,Tỉnh Tiền Giang Chẩn đoán: (L70;) Trứng cá; Thuốc điều trị: 1 Minocyclin 50mg (Zalenka) 30 Viên Uống, sáng 1 viên, chiều 1 viên 2 L-Cystin 500mg (Elovess) 30 Viên Uống, sáng 1 viên, chiều l viên 3 Cetirizin (10mg) (Cetimed) 15 Viên Uống,, chiều 1 viên 4 Lưu huỳnh 5% (Cream Lưu Huỳnh) 2 Lọ Bôi., sáng 1 lần, tối 1 lần thân cộng:4 khoản Ngày cấp đơn 07 tháng 12 năm 2022 - Tái khám: 1 Bác sĩ điều trị + Khi hết thuốc uống hoặc + Bệnh nặng hơn Bs.CKII Hồ Thị Mỹ Châu BENH VIỆN DA LIEU KHU KHÁM THEO YÊU lọc dinh dưỡng: CN: 53Kg; CC: 156 Cm ;BMI: 21 Kg/m2 ên người đưa trẻ đến khám: Khuyến cáo dinh dưỡng: -Ăn đầy đủ chất dinh dưỡng, đặc biệt vitamin A, C,E, kẽm, omega 3... Hạn chế uống sữa, thức ăn nhiều tinh bột, nhiều đường, nhiều dầu mỡ, tránh căng thẳng. hám lại xin mang theo đơn này Tờ:[1-2]
+                Output:``` {
+                        "current_institute": "Bệnh viện Da Liễu",
+                        "patient_name": "TRỊNH PHẠM KIỀU NGA",
+                        "gender": "Nữ",
+                        "birth": "",
+                        "age": "18 tháng",
+                        "address": "Xã Tân Tây, Huyện Gò Công Đông,Tỉnh Tiền Giang",
+                        "tel_customer": "0965839049",
+                        "id_bhyt": "",
+                        "diagnosis": "(L70;) Trứng cá;",
+                        "drugs": [
+                            {
+                                "drug_name": "Minocyclin 50mg (Zalenka)",
+                                "drug_dose": "sáng 1 viên, chiều 1 viên",
+                                "drug_quantity": "30 viên"
+                            },
+                            {
+                                "drug_name": "L-Cystin 500mg (Elovess)",
+                                "drug_dose": "sáng 1 viên, chiều 1 viên",
+                                "drug_quantity": "30 viên"
+                            },
+                            {
+                                "drug_name": "Cetirizin (10mg) (Cetimed)",
+                                "drug_dose": "chiều 1 viên",
+                                "drug_quantity": "15 viên"
+                            },
+                            {
+                                "drug_name": "Lưu huỳnh 5% (Cream Lưu Huỳnh)",
+                                "drug_dose": "bôi sáng 1 lần, tối 1 lần",
+                                "drug_quantity": "2 lọ"
+                            }
+                        ],
+                        "date_in": "07 tháng 12 năm 2022",
+                        "doctor_name": "Bs.CKII Hồ Thị Mỹ Châu"
+                    } ```   
+                    """

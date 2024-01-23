@@ -8,8 +8,9 @@ import time
 from PIL import Image
 import numpy as np
 import requests
-from resources import birth_schema, birth_examples, examples_passport, schema_passport
-from utils import get_OCR, OCR
+import os
+from resources import birth_examples, birth_schema, medical_schema, medical_examples, passport_examples, passport_schema
+from utils import get_OCR
 bnb_config = transformers.BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_quant_type='nf4',
@@ -23,7 +24,7 @@ count = 0
 
 
 
-data_points = """
+schema = """
         {
         "current_institute": "name of the hospital or clinic issuing the prescription",
         "name": "patient full name",
@@ -158,7 +159,7 @@ examples = """
 template = """
                 You are an AI Assistant in general field. Your goal is to provide the extracted information from the input. Think step by step and never skip any step.
                 Please try to extract all data points. Do not add or omit any information. If you don't know, just answer "don't know" and do not include information that is not in the document in your answer.
-                {data_points}
+                {schema}
                
                 EXAMPLES
                 ----
@@ -167,18 +168,37 @@ template = """
                 Input: {content}
                 Output:```
     """.strip()
-def update_data_points(input_text):
-    global data_points
-    data_points = input_text
+
+
+def update_schema(input_text):
+    global schema
+    schema = input_text
 def update_examples(input_text):
     global examples
     examples = input_text
 def update_prompt(schema_des, examples_des):
-    global data_points
+    global schema
     global examples
-    data_points = schema_des    
+    schema = schema_des    
     examples = examples_des
 
+def process_dropdown_value(choice):
+    if choice == 'birth':
+        schema_src = birth_schema
+        examples_src = birth_examples
+        update_schema(birth_schema)
+        update_examples(birth_examples)
+    elif choice == 'passport':
+        schema_src = passport_schema
+        examples_src = passport_examples
+        update_schema(passport_schema)
+        update_examples(passport_examples)
+    elif choice == 'medical':
+        schema_src =  medical_schema
+        examples_src = medical_examples
+        update_schema(medical_schema)
+        update_examples(medical_examples)
+    return schema_src, examples_src
 model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1",
                                             trust_remote_code=True,
                                             quantization_config=bnb_config,
@@ -208,15 +228,16 @@ class StopOnTokens(StoppingCriteria):
             if input_ids[0][-1] == stop_id:
                 return True
         return False
-
+def return_msg(msg):
+    return msg
 def predict(message, history):
 
     # history_transformer_format = history + [[message, ""]]
     stop = StopOnTokens()
-    global data_points
+    global schema
     global examples
     global template
-    formatted_template = template.format(data_points = data_points, examples = examples, content = message)
+    formatted_template = template.format(schema = schema, examples = examples, content = message)
     print(formatted_template)
     # messages = "".join(["".join(["\n<human>:"+item[0], "\n<bot>:"+item[1]])  #curr_system_message +
     #             for item in history_transformer_format])
@@ -255,22 +276,29 @@ with gr.Blocks() as demo:
             convert_button = gr.Button("Get OCR Text")
             output_textbox = gr.Textbox(label="OCR Result", interactive=False, show_copy_button = True)
             convert_button.click(fn=image_to_base64, inputs=image_input, outputs=output_textbox)
-            data_points_input = gr.Textbox(label="Enter your Schema", value=data_points)
-            data_points_button = gr.Button("Update Schema")
-            data_points_button.click(fn=update_data_points, inputs=data_points_input, outputs=None)
+
+            schema_input = gr.Textbox(label="Enter your Schema", value=schema)
+            schema_button = gr.Button("Update Schema")
+            schema_button.click(fn=update_schema, inputs=schema_input, outputs=None)
 
 
             examples_input = gr.Textbox(label="Enter your Examples", value=examples)
             examples_button = gr.Button("Update Examples")
-            examples_button.click(fn=update_examples, inputs=examples_input, outputs=None)
-            gr.Examples(
-            [[schema_passport, examples_passport], [data_points, examples],[birth_schema, birth_examples]],
-            [data_points_input, examples_input],
-            fn=update_prompt,
-            run_on_click=True)
+            examples_button.click(fn = update_examples, inputs=examples_input, outputs=None)
+            
+            document = gr.Dropdown([
+                "passport","birth","medical"
+            ],
+            value = "medical",
+            label = "Select Document Type")
+            # gr.Examples(
+            # [[passport_schema, passport_examples], [schema, examples],[birth_schema, birth_examples]],
+            # [schema_input, examples_input],
+            # fn=update_prompt,
+            # run_on_click=True)
+            document.change(fn = process_dropdown_value, inputs = document, outputs = [schema_input, examples_input])
 
         
         with gr.Column(scale=2):
-
-            gr.ChatInterface(predict)
+            gr.ChatInterface(predict, autofocus= False)
 demo.launch(server_name="0.0.0.0",server_port = 8001, share = True)
