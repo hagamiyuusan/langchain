@@ -47,7 +47,7 @@ birth_examples = """
             "numeric": "01/01/1990",
             "textual": "Ngày một, tháng một, năm một ngàn chín trăm chín mươi"
         },
-        "gender": "Nữa",  
+        "gender": "Nữ",  
         "ethnicity": "Kinh",
         "nationality": "Việt Nam",
         "place_of_birth": "Bảo sanh Long Đất, tỉnh Bà Rịa - Vũng Tàu",
@@ -130,7 +130,7 @@ birth_examples = """
         "ethnicity": "Kinh",
         "nationality": "Việt Nam",
         "place_of_birth": "Xã Phước Hải, huyện Long Đất, tỉnh Đồng Nai",
-        "hometown": "" s
+        "hometown": "" 
     },
     "mother_information": {
         "full_name": "Đặng THị MIÊN",
@@ -156,7 +156,7 @@ birth_examples = """
         "issue_date": "09/06/2023",
         "document_number": "76/GKS-BS"
     }
-}```
+} ```
 """
 
 passport_schema = """
@@ -237,7 +237,7 @@ medical_schema = """
         "drugs": [{
             "drug_name": "drug name",
             "drug_dose": "drug dosage, usage and instructions",
-            "drug_quantity": "drug duantity"
+            "drug_quantity": "drug quantity"
         }],
         "date_in": "issued date",
         "doctor_name": "doctor full name",
@@ -355,3 +355,163 @@ medical_examples = """
                         "doctor_name": "Bs.CKII Hồ Thị Mỹ Châu"
                     } ```   
                     """
+invoices_schema = """
+                    {
+                        "shop_name": "The name of the shop or store where the purchase was made",
+                        "cashier_name": "Name of the cashier who processed the transaction",
+                        "price_total": "The total price of all items before any discounts are applied",
+                        "price_discount": "The total amount of discount applied to the purchase",
+                        "price_unpaid": "The amount that remains unpaid after the transaction, if any",
+                        "customer_name": "Name of the customer making the purchase",
+                        "price_final": "The final price to be paid by the customer after discounts and additions",
+                        "cashier_id": "Unique identifier for the cashier responsible for the transaction",
+                        "customer_phone_number": "Phone number of the customer",
+                        "price_total_paid": "The total amount paid by the customer, including any unpaid balance from previous transactions"
+                    }
+                """
+invoices_examples = """
+
+                        Input: THE COFFEE HOUSE
+                            36 Hoàng Cầu, P.Ô Chợ Dừa, Q.Đống Đa, Hà Nội
+                            Số 17
+                            Thời gian:
+                            30.06.2023003.33
+                            Thu ngân:
+                            CASH1
+                            Số Bill:
+                            122406017252023
+                            Khách hàng:
+                            TT
+                            Tên món
+                            SL
+                            Đ.Giá
+                            T.Tiên
+                            Cold Brew Phúc
+                            1 Bon Tử (Lớn)
+                            1
+                            55000
+                            55 000
+                            2
+                            Nguội
+                            Bánh MiVN Thịt
+                            1
+                            35000
+                            35 000
+                            Tổng số lượng:
+                            2
+                            Thành tien!
+                            90000
+                            + Giảm giá:
+                            16 000
+                            Thanh Toán ;
+                            74000
+                            Tiên khách đưa:
+                            74000
+                            Tiền thừa:
+                            0
+                            + The Visa
+                            74000
+                            Giá sản phẩm đã bao gồm thuế VAT 10%.
+                            Phiêu này chỉ có giá trị xuất hóa đon trong
+                            vòng 2 tiếng từ khi hoàn tất mua hàng.
+                            Hãy quét QR code phía trên hoặc truy cập Q
+                            websizehttpss/teeeeeeee...
+                            Mọi thắc mắc xin liên hệ 02871 087 088
+                            Password Wifi:
+                            thecoffeehouse
+                        Output:``` {
+                            "shop_name": "THE COFFEE HOUSE, 36 Hoàng Cầu, P.Ô Chợ Dừa, Q.Đống Đa, Hà Nội",
+                            "cashier_name": "CASH1",
+                            "price_total": "90000", // Total price before discount
+                            "price_discount": "16000", // Discount applied
+                            "price_unpaid": "0", // Assuming the whole amount is paid as no unpaid amount is mentioned
+                            "customer_name": "TT", // Customer name abbreviation
+                            "price_final": "74000", // Final price after discount
+                            "cashier_id": "122406017252023", // Assuming the 'Số Bill' is the cashier ID
+                            "customer_phone_number": "", // Customer phone number is not provided
+                            "price_total_paid": "74000" // Total amount paid by the customer
+                        } ```
+
+                        Input: CIRCLE R
+                            Store:HN2180
+                            Lo 7, khu di dan Den Lu 2, Phuong Hoang Va
+                            n Thu, Quan Hoang Mai, Thanh Pho Ha Nai,V
+                            iet Nam
+                            Receipt:RW
+                            Date :Wed
+                            05 Jul 2023 21:31:00
+                            Terminal:01
+                            CashierName:Nguyen
+                            Thị Phuong Anh
+                            ITEM UnitPrice Qty
+                            Amount
+                            UIU II II - II
+                            SATORI NUOO Tinh Khiet 1.5L/1 Ch 12,000
+                            DASANI NUOC Suoi Tinh Khiet 1.5L 13,000
+                            SOMERSBY NUOC Tao Len Men Vi Tao 23,000
+                            AOKI Com Nam Cuon Ga Sot Terriya 24,000
+                            G Cha Lua Que Bi 50g/1 Goi
+                            14,000
+                            (LB/58793) Coupon-Cash 10k cho -10,000
+                            (LB/58792) Mua hd tu 40k tang coupon -1
+                            Total Item(s) Qty:
+                            5
+                            Subtotal:
+                            86,000 VND
+                            Total Discount
+                            --100011 VND
+                            Total(+VAT):
+                            75,999VND
+                            Card:
+                            75,999 VND
+                            VISA
+                            --Card Number:
+                            4**********
+                            -RReferneedd 000601000671
+                            -Holder:
+                            *************************
+                            --ApprCoder 267414
+                            - TranID:
+                            000462
+                            CHANGE W an Tn
+                            IN DUE:
+                            NES
+                            0 VND
+                            1 Item(s)
+
+                        Output:``` {
+                                "shop_name": "CIRCLE R, Store:HN2180, Lo 7, khu di dan Den Lu 2, Phuong Hoang Van Thu, Quan Hoang Mai, Thanh Pho Ha Nai, Viet Nam",
+                                "cashier_name": "Nguyen Thị Phuong Anh",
+                                "price_total": "86000", // Subtotal before discounts
+                                "price_discount": "10001", // Total discount applied
+                                "price_unpaid": "0", // Assuming the whole amount is paid as no unpaid amount is mentioned
+                                "customer_name": "", // Customer name is not provided
+                                "price_final": "75999", // Final price after discount and VAT
+                                "cashier_id": "Receipt:RW, Date: Wed 05 Jul 2023 21:31:00, Terminal:01", // Including receipt, date, and terminal as identifier
+                                "customer_phone_number": "", // Customer phone number is not provided
+                                "price_total_paid": "75999" // Total amount paid by the customer
+                            } ```
+"""
+template_kie = """
+                You are an AI Assistant in general field. Your goal is to provide the extracted information from the input. Think step by step and never skip any step.
+                Please try to extract all data points and correct  errors based on the description of the data points, especially those related to dates . Do not add or omit any information. If you don't know, just answer "don't know" and do not include information that is not in the document in your answer.
+                {schema}
+               
+                EXAMPLES
+                ----
+                {examples}
+                ------    
+                Input: {content}
+                Output:```
+    """.strip()
+
+template_general = """ You are an hepful AI assistant, your goal is provide a short helpful respone about the problem that User asked below.
+                The user's input will always start with "User:" and don't have any end character constraint. 
+                The AI asssistant's response will always start with "AI assistant:" and don't have any end character constraint.
+                Example:
+                ----
+                User: Who was Picasso's wife ? \n AI assistant: Olga Koklova.
+                User: Tell me about Donald Trump \n AI assistant : Donald Trump is 44th president of United States of American.
+                ----
+                User: {content} \n AI asssitant:
+                """
