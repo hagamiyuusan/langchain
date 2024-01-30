@@ -9,7 +9,7 @@ from PIL import Image
 import numpy as np
 import requests
 import os
-from resources import birth_examples, birth_schema, medical_schema, medical_examples, passport_examples, passport_schema, invoices_examples, invoices_schema, template_general, template_kie
+from resources import birth_examples, birth_schema, medical_schema, medical_examples, passport_examples, passport_schema, invoices_examples, invoices_schema, template_general, template_kie, business_registration_schema, business_registration_examples
 from utils import get_OCR
 bnb_config = transformers.BitsAndBytesConfig(
     load_in_4bit=True,
@@ -199,6 +199,11 @@ js = "(x) => confirm('Press a button!')"
 
 def process_dropdown_value(choice):
     current_document = f" Selected type of document :  {choice}"
+    if choice == 'business_registration':
+        schema_src = business_registration_schema
+        examples_src = business_registration_examples
+        update_schema(business_registration_schema)
+        update_examples(business_registration_examples)
     if choice == 'birth_certificates':
         schema_src = birth_schema
         examples_src = birth_examples
@@ -330,7 +335,7 @@ with gr.Blocks() as demo:
                         # show_modal_button.click(None, None, None, js = custom_js)
 
             document = gr.Dropdown([
-                "passports", "birth_certificates", "prescriptions", "invoices"
+                "passports", "birth_certificates", "prescriptions", "invoices", "business_registration"
             ],
             value="prescriptions",
             label="Select Document Type")

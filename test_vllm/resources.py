@@ -505,6 +505,9 @@ template_kie = """
                 Output:```
     """.strip()
 
+
+
+
 template_general = """ You are an hepful AI assistant, your goal is provide a short helpful respone about the problem that User asked below.
                 The user's input will always start with "User:" and don't have any end character constraint. 
                 The AI asssistant's response will always start with "AI assistant:" and don't have any end character constraint.
@@ -515,3 +518,288 @@ template_general = """ You are an hepful AI assistant, your goal is provide a sh
                 ----
                 User: {content} \n AI asssitant:
                 """
+
+business_registration_schema = """
+{
+            "city": "The city where the business is registered",
+            "certificate_type": "The type of document issued for business registration",
+            "business_registration_number": "Unique identifier of the business registration",
+            "first_registration_date": "The date when the business was first registered",
+            "latest_registration_amendment": {
+                "amendment_number": "The number indicating how many times the registration has been amended",
+                "date": "The date of the latest registration amendment"
+            },
+            "company_name": {
+                "in_vietnamese": "The official name of the company in Vietnamese",
+                "in_foreign_language": "The official name of the company in a foreign language, if applicable",
+                "abbreviated": "The abbreviated name of the company"
+            },
+            "head_office_address": "The physical address of the company's head office",
+            "contact_information": {
+                "telephone": "The telephone number of the company",
+                "fax": "The fax number of the company",
+                "email": "The email address of the company",
+                "website": "The official website of the company"
+            },
+            "charter_capital": {
+                "amount": "The total amount of the company's charter capital",
+                "in_words": "The total amount of the charter capital written out in words",
+                "share_nominal_value": "The nominal value of each share in the company"
+            },
+            "legal_representative": {
+                "full_name": "The full name of the company's legal representative",
+                "gender": "The gender of the legal representative",
+                "position": "The official position of the legal representative within the company",
+                "date_of_birth": "The birth date of the legal representative",
+                "ethnicity": "The ethnicity of the legal representative",
+                "nationality": "The nationality of the legal representative",
+                "personal_identification_document": {
+                    "type": "The type of personal identification document",
+                    "number": "The number of the identification document",
+                    "date_of_issue": "The issue date of the identification document",
+                    "place_of_issue": "The place where the identification document was issued"
+                },
+                "permanent_residence": "The permanent residence address of the legal representative",
+                "current_residence": "The current residence address of the legal representative"
+            },
+            "registration_officer": "The name of the officer who processed the business registration"
+        }
+"""
+
+business_registration_examples = """
+
+                                        Input:SỞ KẾ HOẠCH VÀ ĐẦU TƯ
+                                        CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                                        THÀNH PHỐ HỒ CHÍ MINH
+                                        Độc lập
+                                        - Tự do - Hạnh phúc
+                                        PHÒNG ĐĂNG KÝ KINH DOANH
+                                        GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP
+                                        CÔNG TY CỔ PHẦN
+                                        Mã số doanh nghiệp:
+                                        0309829579
+                                        Đăng ký lần đầu:
+                                        ngày 11 tháng 03 năm 2010
+                                        Đăng ký thay đổi lần thứ:
+                                        7, ngày 29 tháng 11 năm 2017
+                                        1. Tên công ty
+                                        Tên công ty viết bằng tiếng Việt:
+                                        CÔNG TY CỔ PHẦN TRUNG TÂM CHĂM SÓC
+                                        SỨC KHÓE CỘNG ĐỒNG CHAC
+                                        Tên công ty viết bằng tiếng nước ngoài:
+                                        CHAC COMMUNITY HEALTHCARE
+                                        CENTER CORPORATION
+                                        Tên công ty viết tắt:
+                                        TRUNG TÂM CHĂM SÓC SỨC KHỎE CỘNG ĐÔNG CHAC
+                                        2. Địa chỉ trụ sở chính
+                                        110A Ngô Quyền, Phường 08, Quận 5, Thành phố Hồ Chí Minh, Việt Nam
+                                        Điện thoại:
+                                        0902714743
+                                        Fax:
+                                        Email:
+                                        Website:
+                                        3. Vốn điều lệ
+                                        Vốn điều lệ:
+                                        8.000.000.000 đồng
+                                        Bằng chữ:
+                                        Tám tỷ đồng
+                                        Mệnh giá cổ phần:
+                                        10.000 đồng
+                                        Tổng số cổ phần:
+                                        4. Người đại diện theo pháp luật của công ty
+                                        * Họ và tên:
+                                        NGÔ HỚN ĐÌNH
+                                        Giới tính:
+                                        Nam
+                                        Chức danh:
+                                        Giám đốc
+                                        Sinh ngày:
+                                        25/07/1984
+                                        Dân tộc:
+                                        Hoa
+                                        Quốc tịch:
+                                        Việt Nam
+                                        Loại giấy tờ chứng thực cá nhân:
+                                        Chứng minh nhân dân
+                                        Số giấy chứng thực cá nhân:
+                                        023692354
+                                        Ngày cấp:
+                                        23/06/2005
+                                        Nơi cấp:
+                                        Công an Thành phố Hồ Chí Minh
+                                        Nơi đăng ký hộ khẩu thường trú:
+                                        1442/46 đường 3/2, Phường 2. Quận 11. Thành phố
+                                        Hồ Chí Minh, Việt Nam
+                                        Chỗ ở hiện tại:
+                                        1442/46 đường 3/2, Phường 2, Quận 11, Thành phố Hồ Chí Minh,
+                                        Việt Nam
+                                        W/TRỞNNG PHÒNGôôg
+                                        HOACH A
+                                        PHÒNG
+                                        ĐĂNG KY
+                                        KINH DOANH
+                                        NAPPHHG II     AA
+                                        Hồ Hoành Sơn
+                                        Output:``` {
+                        "city": "Thành phố Hồ Chí Minh",
+                        "certificate_type": "GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP",
+                        "business_registration_number": "0309829579",
+                        "first_registration_date": "ngày 11 tháng 03 năm 2010",
+                        "latest_registration_amendment": {
+                            "amendment_number": "7",
+                            "date": "ngày 29 tháng 11 năm 2017"
+                        },
+                        "company_name": {
+                            "in_vietnamese": "CÔNG TY CỔ PHẦN TRUNG TÂM CHĂM SÓC SỨC KHÓE CỘNG ĐỒNG CHAC",
+                            "in_foreign_language": "CHAC COMMUNITY HEALTHCARE CENTER CORPORATION",
+                            "abbreviated": "TRUNG TÂM CHĂM SÓC SỨC KHỎE CỘNG ĐÔNG CHAC"
+                        },
+                        "head_office_address": "110A Ngô Quyền, Phường 08, Quận 5, Thành phố Hồ Chí Minh, Việt Nam",
+                        "contact_information": {
+                            "telephone": "0902714743",
+                            "fax": "",
+                            "email": "",
+                            "website": ""
+                        },
+                        "charter_capital": {
+                            "amount": "8.000.000.000 đồng",
+                            "in_words": "Tám tỷ đồng",
+                            "share_nominal_value": "10.000 đồng"
+                        },
+                        "legal_representative": {
+                            "full_name": "NGÔ HỚN ĐÌNH",
+                            "gender": "Nam",
+                            "position": "Giám đốc",
+                            "date_of_birth": "25/07/1984",
+                            "ethnicity": "Hoa",
+                            "nationality": "Việt Nam",
+                            "personal_identification_document": {
+                                "type": "Chứng minh nhân dân",
+                                "number": "023692354",
+                                "date_of_issue": "23/06/2005",
+                                "place_of_issue": "Công an Thành phố Hồ Chí Minh"
+                            },
+                            "permanent_residence": "1442/46 đường 3/2, Phường 2, Quận 11, Thành phố Hồ Chí Minh, Việt Nam",
+                            "current_residence": "1442/46 đường 3/2, Phường 2, Quận 11, Thành phố Hồ Chí Minh, Việt Nam"
+                        },
+                        "registration_officer": "Hồ Hoành Sơn"
+                    } ```
+
+                                    Input: SỞ KẾ HOẠCH VÀ ĐẦU TƯ
+                                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                                    THÀNH PHỐ HỒ CHÍ MINH
+                                    Độc lập - Tự do X Hạnh phúc
+                                    PHÒNG ĐĂNG KÝ KINH DOANH
+                                    GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP
+                                    CÔNG TY CỔ PHẦN
+                                    Mã số doanh nghiệp:
+                                    0301442227
+                                    Đăng ký lần đầu:
+                                    ngày 17 tháng 02 năm 2005
+                                    Đăng ký thay đổi lần thứ:
+                                    8, ngày 03 tháng 01 năm 2018
+                                    1. Tên công ty
+                                    Tên công ty viết bằng tiếng Việt:
+                                    CÔNG TY CỔ PHÂN ĐẦU TƯ VÀ PHÁT TRIỂN
+                                    XÂY DỰNG
+                                    Tên công ty viết bằng tiếng nước ngoài:
+                                    INVESTMENT & CONSTRUCTION
+                                    DEVELOPMENT CORPORATION
+                                    Tên công ty viết tắt:
+                                    INVESTCO. CORP
+                                    2. Địa chỉ trụ sở chính
+                                    201 Võ Thị Sáu, Phường 07, Quận 3, Thành phố Hồ Chí Minh, Việt Nam
+                                    Điện thoại:
+                                    08.9320678
+                                    Fax:
+                                    08.9320679
+                                    Email:
+                                    invesco@@nvescovv..om
+                                    Websiter www.invesco.com.vn
+                                    3. Vốn điều lệ
+                                    Vốn điều lệ:
+                                    208.097.020.000 đồng
+                                    Bằng chữ:
+                                    Hai trăm lẻ tám tỷ không trăm chín mươi bảy triệu không
+                                    trăm hai mươi nghìn đồng
+                                    Mệnh giá cổ phần:
+                                    100.000 đồng
+                                    Tổng số cổ phần:
+                                    4. Người đại diện theo pháp luật của công ty
+                                    * Họ và tên:
+                                    NGUYỄN DUY HƯNG
+                                    Giới tính:
+                                    Nam
+                                    Chức danh:
+                                    Tổng giám đốc
+                                    Sinh ngày:
+                                    24/03/1981
+                                    Dân tộc:
+                                    Kinh
+                                    Quốc tịch:
+                                    Việt Nam
+                                    Loại giấy tờ chứng thực cá nhân:
+                                    Chứng minh nhân dân
+                                    Số giấy chứng thực cá nhân:
+                                    011958158
+                                    Ngày cấp:
+                                    17/05/2006
+                                    Nơi cấp:
+                                    Công an Thành phố Hà Nội
+                                    Nơi đăng ký hộ khẩu thường trú:
+                                    Số 56, Tổ 8, Phường Ngọc Hà, Quận Ba Đình,
+                                    Thành phố Hà Nội, Việt Nam
+                                    Chỗ Ở hiện tại:
+                                    Số 201, đường Võ Thị Sáu, Phường 07, Quận 3, Thành phố Hồ Chí
+                                    Minh, Việt Nam
+                                    AEERR PHÒNG
+                                    PHÒNG nhn Trưởng Phòng
+                                    ĐĂNG KÝ
+                                    KINH
+                                    www.LLA
+                                    Võ Thành Thơ
+                                    Output:```  {
+    "city": "Thành phố Hồ Chí Minh",
+    "certificate_type": "GIẤY CHỨNG NHẬN ĐĂNG KÝ DOANH NGHIỆP",
+    "business_registration_number": "0301442227",
+    "first_registration_date": "ngày 17 tháng 02 năm 2005",
+    "latest_registration_amendment": {
+        "amendment_number": "8",
+        "date": "ngày 03 tháng 01 năm 2018"
+    },
+    "company_name": {
+        "in_vietnamese": "CÔNG TY CỔ PHÂN ĐẦU TƯ VÀ PHÁT TRIỂN XÂY DỰNG",
+        "in_foreign_language": "INVESTMENT & CONSTRUCTION DEVELOPMENT CORPORATION",
+        "abbreviated": "INVESTCO. CORP"
+    },
+    "head_office_address": "201 Võ Thị Sáu, Phường 07, Quận 3, Thành phố Hồ Chí Minh, Việt Nam",
+    "contact_information": {
+        "telephone": "08.9320678",
+        "fax": "08.9320679",
+        "email": "invesco@@nvescovv..om",
+        "website": "www.invesco.com.vn"
+    },
+    "charter_capital": {
+        "amount": "208.097.020.000 đồng",
+        "in_words": "Hai trăm lẻ tám tỷ không trăm chín mươi bảy triệu không trăm hai mươi nghìn đồng",
+        "share_nominal_value": "100.000 đồng"
+    },
+    "legal_representative": {
+        "full_name": "NGUYỄN DUY HƯNG",
+        "gender": "Nam",
+        "position": "Tổng giám đốc",
+        "date_of_birth": "24/03/1981",
+        "ethnicity": "Kinh",
+        "nationality": "Việt Nam",
+        "personal_identification_document": {
+            "type": "Chứng minh nhân dân",
+            "number": "011958158",
+            "date_of_issue": "17/05/2006",
+            "place_of_issue": "Công an Thành phố Hà Nội"
+        },
+        "permanent_residence": "Số 56, Tổ 8, Phường Ngọc Hà, Quận Ba Đình, Thành phố Hà Nội, Việt Nam",
+        "current_residence": "Số 201, đường Võ Thị Sáu, Phường 07, Quận 3, Thành phố Hồ Chí Minh, Việt Nam"
+    },
+    "registration_officer": "Võ Thành Thơ"
+} ```
+"""
